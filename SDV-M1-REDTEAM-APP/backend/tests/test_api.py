@@ -384,10 +384,10 @@ async def test_dashboard_stats(mock_db):
         response = await client.get("/api/v1/dashboard/stats")
         assert response.status_code == 200
         data = response.json()
-        assert data["total_hosts"] == 10
-        assert data["total_services"] == 25
-        assert data["total_vulnerabilities"] == 8
-        assert data["total_campaigns"] == 3
+        assert data["hosts"] == 10
+        assert data["services"] == 25
+        assert data["vulnerabilities"] == 8
+        assert data["campaigns"] == 3
         assert data["by_severity"]["critical"] == 2
         assert data["by_severity"]["high"] == 3
         assert len(data["recent_campaigns"]) == 1

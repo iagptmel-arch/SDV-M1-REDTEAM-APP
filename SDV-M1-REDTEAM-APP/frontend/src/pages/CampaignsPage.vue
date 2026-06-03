@@ -95,24 +95,24 @@
         </div>
 
         <div class="text-sm text-red-600" v-if="createError">{{ createError }}</div>
-
-        <template #footer>
-          <button
-            type="button"
-            class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
-            @click="showCreateModal = false"
-          >
-            Annuler
-          </button>
-          <button
-            type="submit"
-            :disabled="creating"
-            class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-medium rounded-lg transition-colors"
-          >
-            {{ creating ? 'Création...' : 'Créer' }}
-          </button>
-        </template>
       </form>
+      <template #footer>
+        <button
+          type="button"
+          class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+          @click="showCreateModal = false"
+        >
+          Annuler
+        </button>
+        <button
+          type="button"
+          :disabled="creating"
+          class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-sm font-medium rounded-lg transition-colors"
+          @click="handleCreate"
+        >
+          {{ creating ? 'Création...' : 'Créer' }}
+        </button>
+      </template>
     </Modal>
   </div>
 </template>
