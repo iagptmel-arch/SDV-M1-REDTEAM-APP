@@ -4,6 +4,7 @@ Connexion MongoDB et fonctions CRUD génériques
 
 from typing import Any
 
+from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.core.config import settings
 
@@ -50,20 +51,27 @@ async def find_many(
     return await cursor.to_list(length=limit)
 
 
+def _convert_id(query: dict) -> dict:
+    """Convertit les chaines `_id` en ObjectId pour MongoDB."""
+    if "_id" in query and isinstance(query["_id"], str):
+        query = {**query, "_id": ObjectId(query["_id"])}
+    return query
+
+
 async def find_one(collection: str, query: dict) -> dict | None:
     """Retourne un document unique."""
-    return await db[collection].find_one(query)
+    return await db[collection].find_one(_convert_id(query))
 
 
 async def update_one(collection: str, query: dict, data: dict) -> bool:
     """Met à jour un document. Retourne True si modifié."""
-    result = await db[collection].update_one(query, {"$set": data})
+    result = await db[collection].update_one(_convert_id(query), {"$set": data})
     return result.modified_count > 0
 
 
 async def delete_one(collection: str, query: dict) -> bool:
     """Supprime un document. Retourne True si supprimé."""
-    result = await db[collection].delete_one(query)
+    result = await db[collection].delete_one(_convert_id(query))
     return result.deleted_count > 0
 
 

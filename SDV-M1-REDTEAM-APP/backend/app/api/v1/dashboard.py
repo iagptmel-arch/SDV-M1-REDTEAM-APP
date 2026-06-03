@@ -34,10 +34,10 @@ async def get_dashboard_stats():
     )
 
     return {
-        "total_hosts": total_hosts,
-        "total_services": total_services,
-        "total_vulnerabilities": total_vulnerabilities,
-        "total_campaigns": total_campaigns,
+        "hosts": total_hosts,
+        "services": total_services,
+        "vulnerabilities": total_vulnerabilities,
+        "campaigns": total_campaigns,
         "by_severity": by_severity,
         "recent_campaigns": [
             {
