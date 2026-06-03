@@ -132,6 +132,7 @@ master
 ├── feat/p3-scheduler
 ├── feat/p3-dashboard
 ├── feat/ci-cd
+├── feat/fix-integration        ← Intégration MongoDB réelle (faite)
 └── feat/documentation
 ```
 

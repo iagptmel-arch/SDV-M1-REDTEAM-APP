@@ -32,6 +32,7 @@ app = FastAPI(
     description="Application de découverte et d'analyse réseau",
     version="0.1.0",
     lifespan=lifespan,
+    redirect_slashes=False,
 )
 
 # Configuration CORS (toutes origines en dev)

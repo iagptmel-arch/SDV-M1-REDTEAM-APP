@@ -18,7 +18,7 @@ from app.schemas.campaign import CampaignCreate, CampaignRead, CampaignUpdate
 router = APIRouter(prefix="/campaigns", tags=["campaigns"])
 
 
-@router.get("/", response_model=list[CampaignRead])
+@router.get("", response_model=list[CampaignRead])
 async def list_campaigns(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=500),
@@ -67,7 +67,7 @@ async def get_campaign(campaign_id: str):
     )
 
 
-@router.post("/", response_model=CampaignRead, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=CampaignRead, status_code=status.HTTP_201_CREATED)
 async def create_campaign(data: CampaignCreate):
     """Crée une nouvelle campagne."""
     campaign_dict = data.model_dump()

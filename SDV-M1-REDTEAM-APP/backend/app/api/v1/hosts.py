@@ -48,7 +48,7 @@ async def _build_host_read(host: dict) -> HostRead:
     )
 
 
-@router.get("/", response_model=list[HostRead])
+@router.get("", response_model=list[HostRead])
 async def list_hosts(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=500),
@@ -80,7 +80,7 @@ async def get_host(host_id: str):
     return await _build_host_read(host)
 
 
-@router.post("/", response_model=HostRead, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=HostRead, status_code=status.HTTP_201_CREATED)
 async def create_host(data: HostCreate):
     """Crée un nouvel hôte."""
     existing = await find_one("hosts", {"ip": data.ip})

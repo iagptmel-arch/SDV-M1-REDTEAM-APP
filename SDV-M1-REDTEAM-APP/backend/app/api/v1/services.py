@@ -40,7 +40,7 @@ async def _build_service_read(service: dict) -> ServiceRead:
     )
 
 
-@router.get("/", response_model=list[ServiceRead])
+@router.get("", response_model=list[ServiceRead])
 async def list_services(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=500),
@@ -79,7 +79,7 @@ async def get_service(service_id: str):
     return await _build_service_read(service)
 
 
-@router.post("/", response_model=ServiceRead, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=ServiceRead, status_code=status.HTTP_201_CREATED)
 async def create_service(data: ServiceCreate):
     """Crée un nouveau service."""
     host = await find_one("hosts", {"_id": data.host_id})

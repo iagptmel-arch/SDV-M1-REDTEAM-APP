@@ -69,7 +69,7 @@ async def _build_vuln_read(vuln: dict) -> VulnerabilityRead:
     )
 
 
-@router.get("/", response_model=list[VulnerabilityRead])
+@router.get("", response_model=list[VulnerabilityRead])
 async def list_vulnerabilities(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=500),
@@ -105,7 +105,7 @@ async def get_vulnerability(vuln_id: str):
     return await _build_vuln_read(vuln)
 
 
-@router.post("/", response_model=VulnerabilityRead, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=VulnerabilityRead, status_code=status.HTTP_201_CREATED)
 async def create_vulnerability(data: VulnerabilityCreate):
     """Crée une nouvelle vulnérabilité."""
     vuln_dict = data.model_dump()

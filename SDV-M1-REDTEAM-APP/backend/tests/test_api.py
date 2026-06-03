@@ -76,7 +76,7 @@ async def test_list_hosts_empty(mock_db):
 
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        response = await client.get("/api/v1/hosts/")
+        response = await client.get("/api/v1/hosts")
         assert response.status_code == 200
         assert response.json() == []
 
@@ -98,7 +98,7 @@ async def test_list_hosts_with_data(mock_db):
 
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        response = await client.get("/api/v1/hosts/")
+        response = await client.get("/api/v1/hosts")
         assert response.status_code == 200
         data = response.json()
         assert len(data) == 1
@@ -163,7 +163,7 @@ async def test_create_host(mock_db):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         response = await client.post(
-            "/api/v1/hosts/",
+            "/api/v1/hosts",
             json={"ip": "10.0.0.1"},
         )
         assert response.status_code == 201
@@ -181,7 +181,7 @@ async def test_create_host_conflict(mock_db):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         response = await client.post(
-            "/api/v1/hosts/",
+            "/api/v1/hosts",
             json={"ip": "10.0.0.1"},
         )
         assert response.status_code == 409
@@ -232,7 +232,7 @@ async def test_list_services(mock_db):
 
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        response = await client.get("/api/v1/services/")
+        response = await client.get("/api/v1/services")
         assert response.status_code == 200
         data = response.json()
         assert len(data) == 1
@@ -272,7 +272,7 @@ async def test_create_service(mock_db):
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         response = await client.post(
-            "/api/v1/services/",
+            "/api/v1/services",
             json={
                 "host_id": "host001",
                 "port": 80,
