@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: redteam-mongo-prod
+    restart: unless-stopped
+    volumes:
+      - mongo_data_prod:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: redteam_app
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: redteam-backend-prod
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGODB_URL=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongo:27017
+      - MONGODB_DB_NAME=redteam_app
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=false
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: redteam-frontend-prod
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data_prod:
