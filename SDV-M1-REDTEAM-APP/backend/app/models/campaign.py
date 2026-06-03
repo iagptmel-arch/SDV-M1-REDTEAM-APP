@@ -3,7 +3,7 @@ Modèle MongoDB pour les campagnes d'analyse
 """
 
 from pydantic import BaseModel, Field
-from typing import Optional, list
+from typing import Optional
 from datetime import datetime
 
 
