@@ -49,12 +49,6 @@
         <template #cell-service_name="{ row }">
           <span class="text-gray-600">{{ row.service_name || '—' }}</span>
         </template>
-        <template #cell-mitre="{ row }">
-          <span class="text-xs text-gray-500">{{ row.mitre_count ?? row.mitre_techniques?.length ?? 0 }} techniques</span>
-        </template>
-        <template #cell-service="{ row }">
-          <span class="text-gray-600">{{ row.service_name || row.service?.name || '—' }}</span>
-        </template>
         <template #actions="{ row }">
           <router-link
             :to="`/vulnerabilities/${row.id}`"
