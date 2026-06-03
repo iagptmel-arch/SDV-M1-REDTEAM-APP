@@ -1,0 +1,51 @@
+"""
+Endpoint de statistiques pour le tableau de bord
+"""
+
+from fastapi import APIRouter
+
+from app.core.database import count, find_many
+
+router = APIRouter(prefix="/dashboard", tags=["dashboard"])
+
+
+@router.get("/stats")
+async def get_dashboard_stats():
+    """Retourne les statistiques globales pour le tableau de bord."""
+    total_hosts = await count("hosts")
+    total_services = await count("services")
+    total_vulnerabilities = await count("vulnerabilities")
+    total_campaigns = await count("campaigns")
+
+    # Compter par sévérité
+    by_severity = {}
+    for level in ["critical", "high", "medium", "low", "info"]:
+        by_severity[level] = await count(
+            "vulnerabilities", {"severity": level}
+        )
+
+    # Récupérer les 5 dernières campagnes
+    recent_campaigns = await find_many(
+        "campaigns",
+        {},
+        skip=0,
+        limit=5,
+        sort=[("created_at", -1)],
+    )
+
+    return {
+        "total_hosts": total_hosts,
+        "total_services": total_services,
+        "total_vulnerabilities": total_vulnerabilities,
+        "total_campaigns": total_campaigns,
+        "by_severity": by_severity,
+        "recent_campaigns": [
+            {
+                "id": str(c["_id"]),
+                "name": c["name"],
+                "status": c.get("status", "draft"),
+                "created_at": str(c.get("created_at", "")),
+            }
+            for c in recent_campaigns
+        ],
+    }
