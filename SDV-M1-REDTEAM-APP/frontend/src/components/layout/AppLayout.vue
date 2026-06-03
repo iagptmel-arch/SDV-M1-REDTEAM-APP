@@ -101,7 +101,7 @@
                   <p class="text-sm font-medium text-gray-700">{{ userName }}</p>
                   <p class="text-xs text-gray-400">{{ userEmail }}</p>
                 </div>
-                <router-link to="/profile" class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50">Profil</router-link>
+                <router-link to="/" class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50">Dashboard</router-link>
                 <button class="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-50" @click="logout">Déconnexion</button>
               </div>
             </div>

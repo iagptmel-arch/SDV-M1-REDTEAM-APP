@@ -19,10 +19,13 @@ class ServiceCreate(BaseModel):
 class ServiceRead(BaseModel):
     id: str
     host_id: str
+    host_ip: Optional[str] = None
     port: int
     protocol: str
+    service: Optional[str] = None
     name: Optional[str] = None
     version: Optional[str] = None
     banner: Optional[str] = None
-    discovered_at: datetime
+    state: str = "open"
+    discovered_at: Optional[datetime] = None
     campaign_id: Optional[str] = None

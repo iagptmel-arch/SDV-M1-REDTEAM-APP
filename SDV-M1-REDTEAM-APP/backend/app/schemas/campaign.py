@@ -3,7 +3,7 @@ Schémas de validation pour les campagnes
 """
 
 from pydantic import BaseModel
-from typing import Optional, list
+from typing import Optional
 from datetime import datetime
 
 
@@ -23,6 +23,8 @@ class CampaignRead(BaseModel):
     started_at: Optional[datetime] = None
     completed_at: Optional[datetime] = None
     created_by: Optional[str] = None
+    summary: Optional[dict] = None
+    error: Optional[str] = None
 
 
 class CampaignUpdate(BaseModel):

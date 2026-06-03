@@ -75,7 +75,7 @@
             >
               <div class="min-w-0 flex-1">
                 <p class="text-sm font-medium text-gray-700 truncate">{{ camp.name }}</p>
-                <p class="text-xs text-gray-400">{{ camp.targets || 'Cibles non spécifiées' }}</p>
+                <p class="text-xs text-gray-400">{{ Array.isArray(camp.targets) ? camp.targets.join(', ') : (camp.targets || 'Cibles non spécifiées') }}</p>
               </div>
               <div class="flex items-center gap-2">
                 <StatusBadge :status="camp.status || 'unknown'" />

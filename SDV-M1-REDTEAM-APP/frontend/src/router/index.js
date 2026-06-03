@@ -10,6 +10,7 @@ import ServicesPage from '../pages/ServicesPage.vue'
 import VulnerabilitiesPage from '../pages/VulnerabilitiesPage.vue'
 import VulnDetailPage from '../pages/VulnDetailPage.vue'
 import CampaignsPage from '../pages/CampaignsPage.vue'
+import CampaignDetailPage from '../pages/CampaignDetailPage.vue'
 import ReportsPage from '../pages/ReportsPage.vue'
 
 const routes = [
@@ -21,7 +22,9 @@ const routes = [
   { path: '/vulnerabilities', name: 'Vulnerabilities', component: VulnerabilitiesPage },
   { path: '/vulnerabilities/:id', name: 'VulnDetail', component: VulnDetailPage },
   { path: '/campaigns', name: 'Campaigns', component: CampaignsPage },
+  { path: '/campaigns/:id', name: 'CampaignDetail', component: CampaignDetailPage },
   { path: '/reports', name: 'Reports', component: ReportsPage },
+  { path: '/:pathMatch(.*)*', redirect: '/' },
 ]
 
 /**
@@ -29,7 +32,7 @@ const routes = [
  */
 export function setupAuthGuard(router) {
   router.beforeEach((to, from, next) => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('access_token')
     if (to.meta.public || token) {
       next()
     } else {

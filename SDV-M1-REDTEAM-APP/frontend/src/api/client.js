@@ -74,6 +74,11 @@ export default {
       body: JSON.stringify(data),
     }, extraHeaders),
 
+  startCampaign: (id, extraHeaders = {}) =>
+    request(`/api/v1/campaigns/${id}/start`, {
+      method: 'POST',
+    }, extraHeaders),
+
   // Auth
   login: (credentials) =>
     request('/api/v1/auth/login', {

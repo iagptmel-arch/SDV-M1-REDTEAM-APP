@@ -40,7 +40,7 @@
           </div>
           <div>
             <p class="text-xs text-gray-400 uppercase tracking-wider">Ports ouverts</p>
-            <p class="text-sm font-medium text-gray-700 mt-1">{{ (host.ports && host.ports.length) || host.port_count || 0 }}</p>
+            <p class="text-sm font-medium text-gray-700 mt-1">{{ host.port_count ?? (host.services?.length ?? 0) }}</p>
           </div>
         </div>
       </div>
@@ -48,7 +48,7 @@
       <!-- Services associés -->
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 class="text-base font-semibold text-gray-700 mb-4">Services détectés</h2>
-        <div v-if="!host.ports || host.ports.length === 0" class="text-center py-8 text-gray-400 text-sm">
+        <div v-if="!host.services || host.services.length === 0" class="text-center py-8 text-gray-400 text-sm">
           Aucun service détecté sur cet hôte
         </div>
         <div v-else class="overflow-x-auto">
@@ -63,10 +63,10 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
-              <tr v-for="(svc, idx) in host.ports" :key="idx" class="hover:bg-gray-50">
-                <td class="px-4 py-3 text-sm font-mono text-gray-700">{{ svc.port || svc.port_id }}</td>
+              <tr v-for="(svc, idx) in host.services" :key="idx" class="hover:bg-gray-50">
+                <td class="px-4 py-3 text-sm font-mono text-gray-700">{{ svc.port || '—' }}</td>
                 <td class="px-4 py-3 text-sm text-gray-600">{{ svc.protocol || 'tcp' }}</td>
-                <td class="px-4 py-3 text-sm text-gray-700">{{ svc.name || svc.service_name || '—' }}</td>
+                <td class="px-4 py-3 text-sm text-gray-700">{{ svc.service || svc.name || '—' }}</td>
                 <td class="px-4 py-3 text-sm text-gray-600">{{ svc.version || '—' }}</td>
                 <td class="px-4 py-3 text-sm text-gray-500 max-w-xs truncate">{{ svc.banner || '—' }}</td>
               </tr>

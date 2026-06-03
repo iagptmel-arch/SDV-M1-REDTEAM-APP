@@ -83,6 +83,10 @@ export function useApi() {
     return request('createCampaign', data)
   }
 
+  async function startCampaign(id) {
+    return request('startCampaign', id)
+  }
+
   return {
     loading,
     error,
@@ -97,5 +101,6 @@ export function useApi() {
     getCampaigns,
     getCampaign,
     createCampaign,
+    startCampaign,
   }
 }

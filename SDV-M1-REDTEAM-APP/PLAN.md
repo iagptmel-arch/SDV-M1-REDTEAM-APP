@@ -31,22 +31,22 @@ Application de découverte et d'analyse réseau.
 ## Phases de développement
 
 ### Phase 1 : Découverte et collecte d'informations
-*Période* : J1 à J30 | *Milestone* : #1
+*Période* : J1 à J30 | *Milestone* : #1 | **Statut** : ✅ Terminée
 
-| # | Tâche | Priorité | Issues |
-|---|-------|----------|--------|
-| 1 | Module de découverte réseau (ping sweep, ARP) | Haute | #3 |
-| 2 | Scan ports TCP/UDP | Haute | #4 |
-| 3 | Identification des services exposés | Haute | #5 |
-| 4 | Banner grabbing | Haute | #6 |
-| 5 | Détection des systèmes d'exploitation | Moyenne | #7 |
-| 6 | Analyse de vulnérabilités (CVE lookup) | Haute | #8 |
-| 7 | Mapping MITRE ATT&CK | Haute | #9 |
-| 8 | Modèles MongoDB et stockage | Haute | #10 |
-| 9 | API endpoints Phase 1 | Haute | #11 |
-| 10 | Frontend : découverte et inventaire | Haute | #12 |
-| 11 | Frontend : vulnérabilités et MITRE | Moyenne | #13 |
-| 12 | Tests Phase 1 | Moyenne | #14 |
+| # | Tâche | Priorité | Issues | Statut |
+|---|-------|----------|--------|--------|
+| 1 | Module de découverte réseau (ping sweep, ARP) | Haute | #3 | ✅ |
+| 2 | Scan ports TCP/UDP | Haute | #4 | ✅ |
+| 3 | Identification des services exposés | Haute | #5 | ✅ |
+| 4 | Banner grabbing | Haute | #6 | ✅ |
+| 5 | Détection des systèmes d'exploitation | Moyenne | #7 | ✅ |
+| 6 | Analyse de vulnérabilités (CVE lookup) | Haute | #8 | ✅ |
+| 7 | Mapping MITRE ATT&CK | Haute | #9 | ✅ |
+| 8 | Modèles MongoDB et stockage | Haute | #10 | ✅ |
+| 9 | API endpoints Phase 1 | Haute | #11 | ✅ |
+| 10 | Frontend : découverte et inventaire | Haute | #12 | ✅ |
+| 11 | Frontend : vulnérabilités et MITRE | Moyenne | #13 | ✅ |
+| 12 | Tests Phase 1 | Moyenne | #14 | ✅ |
 
 **Services backend impliqués** : `discovery.py`, `scanner.py`, `banner.py`, `vulnerability.py`, `mitre.py`
 **Endpoints API** : `/api/v1/hosts/*`, `/api/v1/services/*`, `/api/v1/vulnerabilities/*`, `/api/v1/campaigns/*`
@@ -132,6 +132,7 @@ master
 ├── feat/p3-scheduler
 ├── feat/p3-dashboard
 ├── feat/ci-cd
+├── feat/fix-integration        ← Intégration MongoDB réelle (faite)
 └── feat/documentation
 ```
 
@@ -177,16 +178,16 @@ master
 
 ## Livrables finaux
 
-- [ ] Backend FastAPI documenté
-- [ ] Base MongoDB opérationnelle
-- [ ] Interface web responsive (Tailwind CSS)
-- [ ] Documentation technique complète
-- [ ] Documentation d'installation
-- [ ] Documentation API (Swagger/OpenAPI)
-- [ ] Tests unitaires et d'intégration
-- [ ] Déploiement via Docker et Docker Compose
-- [ ] Tableau de bord opérationnel
-- [ ] Gestion du projet via GitHub Projects
+- [x] Backend FastAPI documenté
+- [x] Base MongoDB opérationnelle
+- [x] Interface web responsive (Tailwind CSS)
+- [x] Documentation technique complète (README, USAGE, PLAN, UI-PLAN)
+- [x] Documentation d'installation
+- [x] Documentation API (Swagger/OpenAPI disponible sur /docs)
+- [x] Tests unitaires et d'intégration (44/44)
+- [x] Déploiement via Docker et Docker Compose
+- [x] Tableau de bord opérationnel
+- [x] Gestion du projet via GitHub Projects (43 issues, 4 milestones)
 
 ---
 
