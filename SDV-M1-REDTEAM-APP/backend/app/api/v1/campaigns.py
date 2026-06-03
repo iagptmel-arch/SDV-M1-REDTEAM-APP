@@ -4,7 +4,7 @@ Endpoints pour la gestion des campagnes
 
 from datetime import datetime
 
-from fastapi import APIRouter, HTTPException, Query, status
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Query, status
 
 from app.core.database import (
     insert_one,
@@ -14,6 +14,7 @@ from app.core.database import (
     count,
 )
 from app.schemas.campaign import CampaignCreate, CampaignRead, CampaignUpdate
+from app.services.pipeline import run_campaign_pipeline
 
 router = APIRouter(prefix="/campaigns", tags=["campaigns"])
 
@@ -40,6 +41,8 @@ async def list_campaigns(
             started_at=c.get("started_at"),
             completed_at=c.get("completed_at"),
             created_by=c.get("created_by"),
+            summary=c.get("summary"),
+            error=c.get("error"),
         )
         for c in campaigns
     ]
@@ -64,6 +67,8 @@ async def get_campaign(campaign_id: str):
         started_at=campaign.get("started_at"),
         completed_at=campaign.get("completed_at"),
         created_by=campaign.get("created_by"),
+        summary=campaign.get("summary"),
+        error=campaign.get("error"),
     )
 
 
@@ -85,6 +90,8 @@ async def create_campaign(data: CampaignCreate):
         started_at=created.get("started_at"),
         completed_at=created.get("completed_at"),
         created_by=created.get("created_by"),
+        summary=created.get("summary"),
+        error=created.get("error"),
     )
 
 
@@ -121,4 +128,31 @@ async def update_campaign(campaign_id: str, data: CampaignUpdate):
         started_at=updated.get("started_at"),
         completed_at=updated.get("completed_at"),
         created_by=updated.get("created_by"),
+        summary=updated.get("summary"),
+        error=updated.get("error"),
     )
+
+
+@router.post("/{campaign_id}/start", status_code=status.HTTP_202_ACCEPTED)
+async def start_campaign(campaign_id: str, background_tasks: BackgroundTasks):
+    """Lance le pipeline de scan pour une campagne."""
+    campaign = await find_one("campaigns", {"_id": campaign_id})
+    if not campaign:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Campagne non trouvée",
+        )
+    if campaign.get("status") in ("running", "completed"):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Campagne déjà {campaign['status']}",
+        )
+
+    # Lancer le pipeline en arrière-plan
+    background_tasks.add_task(run_campaign_pipeline, campaign_id)
+
+    return {
+        "message": "Campagne démarrée",
+        "campaign_id": campaign_id,
+        "status": "running",
+    }
