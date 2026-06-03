@@ -1,21 +1,41 @@
 /**
- * Configuration des routes
+ * Configuration des routes avec garde d'authentification
  */
 
-import Dashboard from '../components/Dashboard.vue'
-import HostList from '../components/HostList.vue'
-import ServiceDetail from '../components/ServiceDetail.vue'
-import VulnerabilityView from '../components/VulnerabilityView.vue'
-import CampaignManager from '../components/CampaignManager.vue'
-import ReportViewer from '../components/ReportViewer.vue'
+import DashboardPage from '../pages/DashboardPage.vue'
+import LoginPage from '../pages/LoginPage.vue'
+import HostsPage from '../pages/HostsPage.vue'
+import HostDetailPage from '../pages/HostDetailPage.vue'
+import ServicesPage from '../pages/ServicesPage.vue'
+import VulnerabilitiesPage from '../pages/VulnerabilitiesPage.vue'
+import VulnDetailPage from '../pages/VulnDetailPage.vue'
+import CampaignsPage from '../pages/CampaignsPage.vue'
+import ReportsPage from '../pages/ReportsPage.vue'
 
 const routes = [
-  { path: '/', name: 'Dashboard', component: Dashboard },
-  { path: '/hosts', name: 'Hosts', component: HostList },
-  { path: '/services', name: 'Services', component: ServiceDetail },
-  { path: '/vulnerabilities', name: 'Vulnerabilities', component: VulnerabilityView },
-  { path: '/campaigns', name: 'Campaigns', component: CampaignManager },
-  { path: '/reports', name: 'Reports', component: ReportViewer },
+  { path: '/login', name: 'Login', component: LoginPage, meta: { public: true } },
+  { path: '/', name: 'Dashboard', component: DashboardPage },
+  { path: '/hosts', name: 'Hosts', component: HostsPage },
+  { path: '/hosts/:id', name: 'HostDetail', component: HostDetailPage },
+  { path: '/services', name: 'Services', component: ServicesPage },
+  { path: '/vulnerabilities', name: 'Vulnerabilities', component: VulnerabilitiesPage },
+  { path: '/vulnerabilities/:id', name: 'VulnDetail', component: VulnDetailPage },
+  { path: '/campaigns', name: 'Campaigns', component: CampaignsPage },
+  { path: '/reports', name: 'Reports', component: ReportsPage },
 ]
+
+/**
+ * Garde d'authentification : redirige vers /login si aucun token JWT
+ */
+export function setupAuthGuard(router) {
+  router.beforeEach((to, from, next) => {
+    const token = localStorage.getItem('token')
+    if (to.meta.public || token) {
+      next()
+    } else {
+      next('/login')
+    }
+  })
+}
 
 export default routes
