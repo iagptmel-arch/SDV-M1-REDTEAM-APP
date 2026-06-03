@@ -31,7 +31,7 @@
         />
         <StatCard
           title="Vulnérabilités"
-          :value="stats.vulns ?? '—'"
+          :value="stats.vulnerabilities ?? '—'"
           icon="&#x26A0;"
           color="#dc2626"
         />

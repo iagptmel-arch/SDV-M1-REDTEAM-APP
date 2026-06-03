@@ -1,5 +1,5 @@
 /**
- * Configuration des routes
+ * Configuration des routes avec garde d'authentification
  */
 
 import DashboardPage from '../pages/DashboardPage.vue'
@@ -13,7 +13,7 @@ import CampaignsPage from '../pages/CampaignsPage.vue'
 import ReportsPage from '../pages/ReportsPage.vue'
 
 const routes = [
-  { path: '/login', name: 'Login', component: LoginPage },
+  { path: '/login', name: 'Login', component: LoginPage, meta: { public: true } },
   { path: '/', name: 'Dashboard', component: DashboardPage },
   { path: '/hosts', name: 'Hosts', component: HostsPage },
   { path: '/hosts/:id', name: 'HostDetail', component: HostDetailPage },
@@ -23,5 +23,19 @@ const routes = [
   { path: '/campaigns', name: 'Campaigns', component: CampaignsPage },
   { path: '/reports', name: 'Reports', component: ReportsPage },
 ]
+
+/**
+ * Garde d'authentification : redirige vers /login si aucun token JWT
+ */
+export function setupAuthGuard(router) {
+  router.beforeEach((to, from, next) => {
+    const token = localStorage.getItem('token')
+    if (to.meta.public || token) {
+      next()
+    } else {
+      next('/login')
+    }
+  })
+}
 
 export default routes

@@ -29,7 +29,7 @@
 
       <DataTable
         :columns="columns"
-        :data="hosts"
+        :data="filteredHosts"
         :per-page="20"
         :search-keys="['ip', 'hostname', 'os']"
         @row-click="goToHost"

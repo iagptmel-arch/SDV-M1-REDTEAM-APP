@@ -151,9 +151,10 @@ async function handleCreate() {
   creating.value = true
   createError.value = ''
   try {
+    const targetsStr = form.value.targets.trim()
     const payload = {
       name: form.value.name.trim(),
-      targets: form.value.targets.trim(),
+      targets: targetsStr ? targetsStr.split(',').map(t => t.trim()).filter(Boolean) : [],
       description: form.value.description.trim(),
     }
     const newCamp = await createCampaign(payload)
