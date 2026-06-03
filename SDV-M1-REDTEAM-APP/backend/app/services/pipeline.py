@@ -142,10 +142,10 @@ async def _process_host(
         else:
             svc_id = await insert_one("services", service_doc)
 
-        # Recherche CVE (timeout 20s)
+        # Recherche CVE (timeout 20s) — par nom de service uniquement
         cves = []
-        if svc_name not in ("unknown", "") and svc_version:
-            cache_key = f"{svc_name}:{svc_version}"
+        if svc_name not in ("unknown", "", "tcpwrapped"):
+            cache_key = f"cve:{svc_name}"
             if cache_key in _cve_cache:
                 cves = _cve_cache[cache_key]
             else:
