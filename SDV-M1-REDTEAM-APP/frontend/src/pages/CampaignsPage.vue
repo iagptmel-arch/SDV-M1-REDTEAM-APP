@@ -49,8 +49,8 @@
               </div>
               <p class="text-sm text-gray-500 mt-1">{{ camp.description || 'Aucune description' }}</p>
               <div class="flex items-center gap-4 mt-3 text-xs text-gray-400">
-                <span>Cibles: {{ camp.targets || 'Non spécifiées' }}</span>
-                <span>Créée le {{ formatDate(camp.created_at) }}</span>
+                <span>Cibles: {{ formatTargets(camp.targets) }}</span>
+                <span v-if="camp.created_at">Créée le {{ formatDate(camp.created_at) }}</span>
               </div>
             </div>
           </div>
@@ -144,6 +144,11 @@ function formatDate(dateStr) {
   if (!dateStr) return ''
   const d = new Date(dateStr)
   return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
+}
+
+function formatTargets(targets) {
+  if (!targets || targets.length === 0) return 'Non spécifiées'
+  return targets.join(', ')
 }
 
 async function handleCreate() {

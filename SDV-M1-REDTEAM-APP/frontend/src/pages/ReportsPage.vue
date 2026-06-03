@@ -71,8 +71,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useApi } from '../composables/useApi.js'
 import LoadingSpinner from '../components/common/LoadingSpinner.vue'
 import EmptyState from '../components/common/EmptyState.vue'
+
+const { getCampaigns } = useApi()
 
 const reports = ref([])
 const loading = ref(true)
@@ -85,18 +88,63 @@ function formatDate(dateStr) {
 }
 
 function exportReport(report, format) {
-  // Placeholder — à implémenter avec l'API backend
-  const filename = `${report.name || 'rapport'}_${report.id}.${format}`
-  alert(`Export ${format.toUpperCase()} du rapport "${report.name}" — ${filename}`)
+  // Export local des données de la campagne
+  const data = {
+    id: report.id,
+    name: report.name,
+    target: report.target,
+    status: report.status,
+    hosts_found: report.hosts_found,
+    services_found: report.services_found,
+    vulnerabilities_found: report.vulnerabilities_found,
+    started_at: report.started_at,
+    completed_at: report.completed_at,
+    exported_at: new Date().toISOString(),
+  }
+
+  let content, mimeType
+  const filename = `${(report.name || 'rapport').replace(/\s+/g, '_')}.${format}`
+
+  if (format === 'json') {
+    content = JSON.stringify(data, null, 2)
+    mimeType = 'application/json'
+  } else if (format === 'csv') {
+    const headers = Object.keys(data).join(',')
+    const values = Object.values(data).map(v => `"${v || ''}"`).join(',')
+    content = headers + '\n' + values
+    mimeType = 'text/csv'
+  } else {
+    // PDF : fallback vers JSON
+    content = JSON.stringify(data, null, 2)
+    mimeType = 'application/json'
+  }
+
+  const blob = new Blob([content], { type: mimeType })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  a.click()
+  URL.revokeObjectURL(url)
 }
 
 onMounted(async () => {
   try {
-    // Simuler des données pour l'instant
-    // À remplacer par: const data = await getReports()
-    // reports.value = data.reports || data
-    await new Promise((r) => setTimeout(r, 500))
-    reports.value = []
+    const data = await getCampaigns()
+    const campaigns = data.campaigns || data || []
+    reports.value = campaigns.map((c) => ({
+      id: c.id,
+      name: c.name || 'Campagne',
+      campaign_id: c.id,
+      campaign_name: c.name,
+      created_at: c.started_at || c.created_at,
+      type: c.status === 'completed' ? 'Analyse terminée' : c.status === 'running' ? 'En cours' : 'Planifiée',
+      hosts_found: c.hosts_found || 0,
+      services_found: c.services_found || 0,
+      vulnerabilities_found: c.vulnerabilities_found || 0,
+      status: c.status,
+      target: c.target,
+    }))
   } catch (err) {
     error.value = err.message || 'Erreur lors du chargement des rapports'
   } finally {

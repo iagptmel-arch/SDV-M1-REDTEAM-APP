@@ -238,3 +238,43 @@ def map_to_mitre(
                 seen.add(tech["technique_id"])
 
     return results
+
+
+# Index global de toutes les techniques MITRE (ID → objet)
+_ALL_TECHNIQUES: dict[str, dict[str, str]] = {}
+
+for _techs in list(MITRE_MAPPING.values()) + list(CVE_MITRE_MAPPING.values()):
+    for _t in _techs:
+        _ALL_TECHNIQUES[_t["technique_id"]] = {
+            "id": _t["technique_id"],
+            "name": _t["technique_name"],
+            "tactic": _t["tactic"],
+            "description": _t["description"],
+        }
+
+
+def enrich_mitre_techniques(technique_ids: list[str]) -> list[dict[str, str]]:
+    """
+    Convertit une liste d'IDs de techniques MITRE en objets enrichis.
+
+    Args:
+        technique_ids: Liste d'IDs (ex: ["T1190", "T1499"])
+
+    Returns:
+        Liste d'objets {id, name, tactic, description}
+    """
+    results = []
+    seen = set()
+    for tid in technique_ids:
+        if tid in _ALL_TECHNIQUES and tid not in seen:
+            results.append(_ALL_TECHNIQUES[tid])
+            seen.add(tid)
+        elif tid not in seen:
+            results.append({
+                "id": tid,
+                "name": tid,
+                "tactic": "Unknown",
+                "description": "Technique non référencée dans la base.",
+            })
+            seen.add(tid)
+    return results

@@ -72,6 +72,7 @@ async def create_campaign(data: CampaignCreate):
     """Crée une nouvelle campagne."""
     campaign_dict = data.model_dump()
     campaign_dict["status"] = "draft"
+    campaign_dict["created_at"] = datetime.utcnow()
     campaign_id = await insert_one("campaigns", campaign_dict)
     created = await find_one("campaigns", {"_id": campaign_id})
     return CampaignRead(

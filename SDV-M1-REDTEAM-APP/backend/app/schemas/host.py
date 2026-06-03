@@ -28,8 +28,12 @@ class HostRead(BaseModel):
     ip: str
     hostname: Optional[str] = None
     os: Optional[str] = None
+    mac: Optional[str] = None
     status: str
-    discovered_at: datetime
+    port_count: int = 0
+    services: list = []
+    discovered_at: Optional[datetime] = None
+    last_seen: Optional[datetime] = None
     campaign_id: Optional[str] = None
 
 

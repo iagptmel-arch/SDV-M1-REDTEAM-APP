@@ -34,14 +34,20 @@
         :columns="columns"
         :data="filteredVulns"
         :per-page="20"
-        :search-keys="['cve', 'service_name', 'name']"
+        :search-keys="['cve_id', 'service_name', 'name']"
         @row-click="goToVuln"
       >
         <template #cell-severity="{ row }">
           <SeverityBadge :severity="row.severity" />
         </template>
-        <template #cell-cvss="{ row }">
-          <span class="font-mono">{{ row.cvss ?? '—' }}</span>
+        <template #cell-cvss_score="{ row }">
+          <span class="font-mono">{{ row.cvss_score ?? '—' }}</span>
+        </template>
+        <template #cell-mitre="{ row }">
+          <span class="text-xs text-gray-500">{{ row.mitre_techniques?.length ?? 0 }} techniques</span>
+        </template>
+        <template #cell-service_name="{ row }">
+          <span class="text-gray-600">{{ row.service_name || '—' }}</span>
         </template>
         <template #cell-mitre="{ row }">
           <span class="text-xs text-gray-500">{{ row.mitre_count ?? row.mitre_techniques?.length ?? 0 }} techniques</span>
@@ -82,10 +88,10 @@ const error = ref(null)
 const filters = ref({ severity: '' })
 
 const columns = [
-  { key: 'cve', label: 'CVE' },
-  { key: 'service', label: 'Service' },
+  { key: 'cve_id', label: 'CVE' },
+  { key: 'service_name', label: 'Service' },
   { key: 'severity', label: 'Sévérité' },
-  { key: 'cvss', label: 'CVSS' },
+  { key: 'cvss_score', label: 'CVSS' },
   { key: 'mitre', label: 'MITRE' },
 ]
 

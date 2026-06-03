@@ -17,6 +17,37 @@ from app.schemas.host import HostCreate, HostRead, HostUpdate
 router = APIRouter(prefix="/hosts", tags=["hosts"])
 
 
+async def _build_host_read(host: dict) -> HostRead:
+    """Construit un HostRead avec port_count et services résolus."""
+    host_id_str = str(host["_id"])
+    service_count = await count("services", {"host_id": host_id_str})
+    services = await find_many("services", {"host_id": host_id_str})
+    return HostRead(
+        id=host_id_str,
+        ip=host["ip"],
+        hostname=host.get("hostname"),
+        os=host.get("os"),
+        mac=host.get("mac"),
+        status=host.get("status", "unknown"),
+        port_count=service_count,
+        services=[
+            {
+                "id": str(s["_id"]),
+                "port": s.get("port"),
+                "protocol": s.get("protocol"),
+                "service": s.get("service") or s.get("name"),
+                "version": s.get("version"),
+                "banner": s.get("banner"),
+                "state": s.get("state", "open"),
+            }
+            for s in services
+        ],
+        discovered_at=host.get("discovered_at"),
+        last_seen=host.get("last_seen"),
+        campaign_id=host.get("campaign_id"),
+    )
+
+
 @router.get("/", response_model=list[HostRead])
 async def list_hosts(
     skip: int = Query(0, ge=0),
@@ -34,19 +65,7 @@ async def list_hosts(
             {"hostname": {"$regex": search, "$options": "i"}},
         ]
     hosts = await find_many("hosts", query, skip=skip, limit=limit)
-    total = await count("hosts", query)
-    return [
-        HostRead(
-            id=str(h["_id"]),
-            ip=h["ip"],
-            hostname=h.get("hostname"),
-            os=h.get("os"),
-            status=h.get("status", "unknown"),
-            discovered_at=h.get("discovered_at"),
-            campaign_id=h.get("campaign_id"),
-        )
-        for h in hosts
-    ]
+    return [await _build_host_read(h) for h in hosts]
 
 
 @router.get("/{host_id}", response_model=HostRead)
@@ -58,15 +77,7 @@ async def get_host(host_id: str):
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Hôte non trouvé",
         )
-    return HostRead(
-        id=str(host["_id"]),
-        ip=host["ip"],
-        hostname=host.get("hostname"),
-        os=host.get("os"),
-        status=host.get("status", "unknown"),
-        discovered_at=host.get("discovered_at"),
-        campaign_id=host.get("campaign_id"),
-    )
+    return await _build_host_read(host)
 
 
 @router.post("/", response_model=HostRead, status_code=status.HTTP_201_CREATED)
@@ -82,15 +93,7 @@ async def create_host(data: HostCreate):
     host_dict["status"] = "unknown"
     host_id = await insert_one("hosts", host_dict)
     created = await find_one("hosts", {"_id": host_id})
-    return HostRead(
-        id=str(created["_id"]),
-        ip=created["ip"],
-        hostname=created.get("hostname"),
-        os=created.get("os"),
-        status=created.get("status", "unknown"),
-        discovered_at=created.get("discovered_at"),
-        campaign_id=created.get("campaign_id"),
-    )
+    return await _build_host_read(created)
 
 
 @router.delete("/{host_id}", status_code=status.HTTP_204_NO_CONTENT)

@@ -37,8 +37,8 @@
         <template #cell-status="{ row }">
           <StatusBadge :status="row.status" />
         </template>
-        <template #cell-ports="{ row }">
-          <span class="text-gray-600">{{ row.ports ?? row.port_count ?? '—' }}</span>
+        <template #cell-port_count="{ row }">
+          <span class="text-gray-600">{{ row.port_count ?? '—' }}</span>
         </template>
         <template #actions="{ row }">
           <router-link
@@ -77,7 +77,7 @@ const columns = [
   { key: 'hostname', label: 'Hostname' },
   { key: 'os', label: 'Système' },
   { key: 'status', label: 'Statut' },
-  { key: 'ports', label: 'Ports' },
+  { key: 'port_count', label: 'Ports' },
 ]
 
 const statusOptions = [

@@ -2,6 +2,8 @@
 Endpoint de statistiques pour le tableau de bord
 """
 
+from datetime import datetime
+
 from fastapi import APIRouter
 
 from app.core.database import count, find_many
@@ -44,7 +46,8 @@ async def get_dashboard_stats():
                 "id": str(c["_id"]),
                 "name": c["name"],
                 "status": c.get("status", "draft"),
-                "created_at": str(c.get("created_at", "")),
+                "targets": c.get("targets", []),
+                "created_at": c["created_at"].isoformat() if isinstance(c.get("created_at"), datetime) else str(c.get("created_at") or ""),
             }
             for c in recent_campaigns
         ],

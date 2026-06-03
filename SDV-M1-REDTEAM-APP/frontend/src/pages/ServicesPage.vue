@@ -53,13 +53,13 @@
         :columns="columns"
         :data="filteredServices"
         :per-page="20"
-        :search-keys="['port', 'name', 'version', 'host_ip']"
+        :search-keys="['port', 'service', 'name', 'version', 'host_ip']"
       >
         <template #cell-port="{ row }">
-          <span class="font-mono font-medium text-gray-700">{{ row.port || row.port_number }}</span>
+          <span class="font-mono font-medium text-gray-700">{{ row.port }}</span>
         </template>
-        <template #cell-name="{ row }">
-          <span class="font-medium">{{ row.name || row.service_name || '—' }}</span>
+        <template #cell-service="{ row }">
+          <span class="font-medium">{{ row.service || row.name || '—' }}</span>
         </template>
         <template #cell-host_ip="{ row }">
           <router-link
@@ -99,7 +99,7 @@ const filters = ref({
 const columns = [
   { key: 'port', label: 'Port' },
   { key: 'protocol', label: 'Protocole' },
-  { key: 'name', label: 'Service' },
+  { key: 'service', label: 'Service' },
   { key: 'version', label: 'Version' },
   { key: 'banner', label: 'Banner' },
   { key: 'host_ip', label: 'Hôte' },
@@ -108,8 +108,8 @@ const columns = [
 const filteredServices = computed(() => {
   return services.value.filter((s) => {
     if (filters.value.protocol && s.protocol !== filters.value.protocol) return false
-    if (filters.value.portMin && (s.port || s.port_number) < filters.value.portMin) return false
-    if (filters.value.portMax && (s.port || s.port_number) > filters.value.portMax) return false
+    if (filters.value.portMin && (s.port ?? 0) < filters.value.portMin) return false
+    if (filters.value.portMax && (s.port ?? 0) > filters.value.portMax) return false
     return true
   })
 })

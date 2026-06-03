@@ -224,6 +224,11 @@ async def test_list_services(mock_db):
         "campaign_id": None,
     }
     mock_db["svc_find_many"].return_value = [mock_svc]
+    mock_db["svc_find_one"].return_value = {
+        "_id": "host001",
+        "ip": "10.0.0.1",
+        "hostname": "test-host",
+    }
 
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
@@ -370,12 +375,13 @@ async def test_dashboard_stats(mock_db):
         return counts.get(collection, 0)
 
     mock_db["dash_count"].side_effect = count_side_effect
+    from datetime import datetime
     mock_db["dash_find_many"].return_value = [
         {
             "_id": "camp001",
             "name": "Test Campaign",
             "status": "completed",
-            "created_at": "2026-01-01T00:00:00",
+            "created_at": datetime(2026, 1, 1, 0, 0, 0),
         }
     ]
 

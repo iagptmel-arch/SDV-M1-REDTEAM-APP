@@ -22,6 +22,7 @@ const routes = [
   { path: '/vulnerabilities/:id', name: 'VulnDetail', component: VulnDetailPage },
   { path: '/campaigns', name: 'Campaigns', component: CampaignsPage },
   { path: '/reports', name: 'Reports', component: ReportsPage },
+  { path: '/:pathMatch(.*)*', redirect: '/' },
 ]
 
 /**
@@ -29,7 +30,7 @@ const routes = [
  */
 export function setupAuthGuard(router) {
   router.beforeEach((to, from, next) => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('access_token')
     if (to.meta.public || token) {
       next()
     } else {

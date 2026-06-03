@@ -19,7 +19,7 @@
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <div class="flex items-start justify-between gap-4">
           <div>
-            <h1 class="text-2xl font-bold text-gray-800 font-mono">{{ vuln.cve || vuln.id }}</h1>
+            <h1 class="text-2xl font-bold text-gray-800 font-mono">{{ vuln.cve_id || vuln.id }}</h1>
             <p class="text-gray-500 mt-1">{{ vuln.name || vuln.description?.slice(0, 100) }}</p>
           </div>
           <SeverityBadge :severity="vuln.severity" />
@@ -30,12 +30,12 @@
           <div>
             <p class="text-xs text-gray-400 uppercase tracking-wider">Score CVSS</p>
             <p class="text-2xl font-bold mt-1" :class="cvssColorClass">
-              {{ vuln.cvss ?? 'N/A' }}
+              {{ vuln.cvss_score ?? 'N/A' }}
             </p>
           </div>
           <div>
             <p class="text-xs text-gray-400 uppercase tracking-wider">Service associé</p>
-            <p class="text-sm font-medium text-gray-700 mt-1">{{ vuln.service_name || vuln.service?.name || '—' }}</p>
+            <p class="text-sm font-medium text-gray-700 mt-1">{{ vuln.service_name || '—' }}</p>
           </div>
           <div>
             <p class="text-xs text-gray-400 uppercase tracking-wider">Techniques MITRE</p>
@@ -44,7 +44,7 @@
         </div>
 
         <!-- Barre CVSS -->
-        <div v-if="vuln.cvss" class="mt-4">
+        <div v-if="vuln.cvss_score" class="mt-4">
           <div class="w-full bg-gray-200 rounded-full h-2.5">
             <div
               class="h-2.5 rounded-full transition-all"
@@ -110,7 +110,7 @@ const error = ref(null)
 const mitreTechniques = ref([])
 
 const cvssColorClass = computed(() => {
-  const score = parseFloat(vuln.value?.cvss)
+  const score = parseFloat(vuln.value?.cvss_score)
   if (score >= 9) return 'text-red-600'
   if (score >= 7) return 'text-orange-500'
   if (score >= 4) return 'text-yellow-500'
@@ -118,7 +118,7 @@ const cvssColorClass = computed(() => {
 })
 
 const cvssBarClass = computed(() => {
-  const score = parseFloat(vuln.value?.cvss)
+  const score = parseFloat(vuln.value?.cvss_score)
   if (score >= 9) return 'bg-red-600'
   if (score >= 7) return 'bg-orange-500'
   if (score >= 4) return 'bg-yellow-500'
@@ -126,7 +126,7 @@ const cvssBarClass = computed(() => {
 })
 
 const cvssPercent = computed(() => {
-  const score = parseFloat(vuln.value?.cvss)
+  const score = parseFloat(vuln.value?.cvss_score)
   if (isNaN(score)) return 0
   return (score / 10) * 100
 })
@@ -136,7 +136,7 @@ async function fetchVuln() {
   try {
     const data = await getVulnerability(route.params.id)
     vuln.value = data.vulnerability || data
-    mitreTechniques.value = data.mitre_techniques || (data.vulnerability?.mitre_techniques) || []
+    mitreTechniques.value = data.mitre_techniques || []
   } catch (err) {
     error.value = err.message || 'Erreur lors du chargement'
   }
